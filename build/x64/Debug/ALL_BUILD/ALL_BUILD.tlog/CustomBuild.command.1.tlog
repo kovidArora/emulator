@@ -1,0 +1,10 @@
+^C:\USERS\KRITI\ONEDRIVE\DESKTOP\CODING\CHIP 8 EMULATOR\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator" "-BC:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build" --check-stamp-file "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
