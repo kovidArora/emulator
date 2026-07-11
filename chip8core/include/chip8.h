@@ -6,7 +6,10 @@ class Chip8
 {
 public:
     Chip8();
+    void tick();
     void reset();
+    void tick_timers();
+
     static constexpr int REG_SIZE=16;
     static constexpr int SCREEN_WIDTH = 64;
     static constexpr int SCREEN_HEIGHT = 32;
@@ -16,6 +19,8 @@ public:
 
 
 private:
+    void execute(uint16_t opcode);
+    uint16_t fetch();
     void push (uint16_t value );
     uint16_t pop ();
     uint16_t pc;

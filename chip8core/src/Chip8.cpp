@@ -37,6 +37,38 @@ Chip8::Chip8()
     std::fill(keys, keys + NUM_KEYS, false);
     std::copy(FONTSET, FONTSET + FONTSET_SIZE, ram);
 }
+void Chip8::tick()
+{
+    // Fetch
+    uint16_t opcode = fetch();
+
+    // Decode // Execute
+    execute(opcode);
+}
+void Chip8::execute(uint16_t opcode){
+    
+
+}
+uint16_t Chip8::fetch(){
+    uint8_t higher_byte= ram[pc];
+    uint8_t lower_byte = ram[pc+1];
+    uint16_t op = (higher_byte << 8) | lower_byte;
+    pc+=2;
+    return op;
+}
+void Chip8::tick_timers(){
+    if (delay_timer>0){
+        delay_timer-=1;
+    }
+    if (sound_timer>0){
+        if(sound_timer==1){
+            //TODO : beep
+            std:: cout << "add a beeping sound to your code";
+        }
+        sound_timer-=1;
+    }
+
+}
 void Chip8::reset(){
     pc = START_ADDR;
     i_reg = 0;
