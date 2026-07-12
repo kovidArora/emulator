@@ -1,6 +1,7 @@
 #include "chip8.h"
 #include <algorithm>
 #include <iostream>
+
 constexpr int FONTSET_SIZE=80;
 constexpr int START_ADDR= 0x200;
 const uint8_t FONTSET[FONTSET_SIZE]={
@@ -82,7 +83,6 @@ void Chip8::execute(uint16_t opcode){
         case 0x8000:
             break;
         case 0x9000:
-            //clear screen
             break;
         case 0xA000:
             break;
@@ -113,13 +113,21 @@ uint16_t Chip8::fetch(){
     pc+=2;
     return op;
 }
+void Chip8::playSound()
+{
+    if(PlaySound(TEXT("../../assets/sound/Recording.wav"), NULL, SND_FILENAME | SND_ASYNC))
+        {
+        std::cerr << "Failed to play sound.\n";
+        }
+    
+}
 void Chip8::tick_timers(){
     if (delay_timer>0){
         delay_timer-=1;
     }
     if (sound_timer>0){
         if(sound_timer==1){
-            //TODO : beep
+            playSound();
             std:: cout << "add a beeping sound to your code";
         }
         sound_timer-=1;
@@ -147,10 +155,9 @@ void Chip8::push(uint16_t value){
 uint16_t Chip8::pop(){
     if(sp==0){
         std::cout<<"stack underflow error from the emulator";
-        //TODO: add code to stop emulation later
+        stop();   
     }
     sp--;
-
     return stack[sp];
 }
 void Chip8::jump(uint16_t opcode){
@@ -169,12 +176,14 @@ void Chip8::subroutine(uint16_t opcode){
     pc = opcode & 0x0FFF;
 }
 void Chip8::skipNextIfEquals(uint16_t opcode){
-    uint8_t x = opcode & 0x0F00;
+    //this skips by incrementing pc once here , so that in the next fetch cycle its inc again and we skip one
+    uint8_t x = opcode & 0x0F00 >>8;
     uint16_t nn = opcode & 0x00FF;
     if (v_reg[x]==nn)
         pc+=2;
 }; 
 void Chip8::skipNextIfNotEquals(uint16_t opcode){
+    //this skips by incrementing pc once here , so that in the next fetch cycle its inc again and we skip one
     uint8_t x = opcode & 0x0F00>>8;
     uint16_t nn = opcode & 0x00FF;
     if (v_reg[x]!=nn)

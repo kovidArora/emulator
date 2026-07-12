@@ -1,6 +1,9 @@
-#pragma once
-
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <mmsystem.h>
 #include <cstdint>
+
+#pragma once
 
 class Chip8
 {
@@ -43,4 +46,5 @@ private:
     uint16_t fetch();
     void push (uint16_t value );
     uint16_t pop ();
+    void playSound();
 };
