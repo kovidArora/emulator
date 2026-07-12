@@ -4,8 +4,7 @@ int main()
 {
     Chip8 chip8;
 
-    chip8.Initialize();
-    chip8.Cycle();
+
 
     return 0;
 }

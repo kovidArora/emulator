@@ -181,6 +181,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{C5B24A88-72B2-318A-8A38-51272C3C47A5}</Project>
       <Name>desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="C:\Users\kriti\OneDrive\Desktop\coding\chip 8 emulator\build\testing.vcxproj">
+      <Project>{EB285DE5-347B-3217-8CBA-994EC1EC3FA6}</Project>
+      <Name>testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

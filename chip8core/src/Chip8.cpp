@@ -48,6 +48,63 @@ void Chip8::tick()
 void Chip8::execute(uint16_t opcode){
     
 
+    switch (opcode & 0xF000){
+        case 0x0000:
+            //clear screen
+            switch(opcode ){
+                case 0x0000:
+                   break;
+                case 0x00E0: 
+                    clear_screen();
+                    break;
+                case 0x00EE: 
+                    returnFromSubroutine();
+                    break;
+            }
+            break;
+        case 0x1000:
+            jump(opcode);
+            break;
+        case 0x2000:
+            subroutine(opcode);
+            break;
+        case 0x3000:
+            skipNextIfEquals(opcode);
+            break;
+        case 0x4000:
+            break;
+        case 0x5000:
+            break;
+        case 0x6000:
+            break;
+        case 0x7000:
+            break;
+        case 0x8000:
+            break;
+        case 0x9000:
+            //clear screen
+            break;
+        case 0xA000:
+            break;
+        case 0xB000:
+            break;
+        case 0xC000:
+            break;
+        case 0xD000:
+            break;
+        case 0xE000:
+            break;
+        case 0xF000:
+            break;
+        default :
+            std::cout<<"Incorrect Opcode , something broke " ;     
+             stop();
+             break;
+    }
+}
+void Chip8::stop()
+{
+    std::exit(EXIT_FAILURE);   // or EXIT_SUCCESS
 }
 uint16_t Chip8::fetch(){
     uint8_t higher_byte= ram[pc];
@@ -77,14 +134,14 @@ void Chip8::reset(){
     sound_timer = 0;
 
     std::fill(ram, ram + RAM_SIZE, 0);
-    std::fill(screen, screen + SCREEN_WIDTH * SCREEN_HEIGHT, false);
+    clear_screen();
     std::fill(v_reg, v_reg + REG_SIZE, 0);
     std::fill(stack, stack + STACK_SIZE, 0);
     std::fill(keys, keys + NUM_KEYS, false);
     std::copy(FONTSET, FONTSET + FONTSET_SIZE, ram);
 }
 void Chip8::push(uint16_t value){
-    stack[sp]==value;
+    stack[sp]=value;
     sp++;
 }
 uint16_t Chip8::pop(){
@@ -96,3 +153,30 @@ uint16_t Chip8::pop(){
 
     return stack[sp];
 }
+void Chip8::jump(uint16_t opcode){
+    pc= opcode&0x0FFF;
+}
+void Chip8::clear_screen(){
+    std::fill(screen, screen + SCREEN_WIDTH * SCREEN_HEIGHT, false);
+}
+void Chip8::returnFromSubroutine(){
+    --sp;
+    pc = stack[sp];
+}
+void Chip8::subroutine(uint16_t opcode){
+    stack[sp] = pc;
+    ++sp;
+    pc = opcode & 0x0FFF;
+}
+void Chip8::skipNextIfEquals(uint16_t opcode){
+    uint8_t x = opcode & 0x0F00;
+    uint16_t nn = opcode & 0x00FF;
+    if (v_reg[x]==nn)
+        pc+=2;
+}; 
+void Chip8::skipNextIfNotEquals(uint16_t opcode){
+    uint8_t x = opcode & 0x0F00>>8;
+    uint16_t nn = opcode & 0x00FF;
+    if (v_reg[x]!=nn)
+        pc+=2;
+}; 

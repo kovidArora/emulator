@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(chip8_core
-    chip8core/src/Chip8.cpp
+    chip8core/src/Chip8.cpp  
+    chip8core/include/chip8.h  
+
 )
 target_include_directories(chip8_core
     PUBLIC
@@ -15,8 +17,16 @@ target_include_directories(chip8_core
 add_executable(desktop
     application/src/main.cpp
 )
+add_executable(testing
+    application/src/testing.cpp
+)
 
 target_link_libraries(desktop
+    PRIVATE
+        chip8_core
+)
+
+target_link_libraries(testing
     PRIVATE
         chip8_core
 )

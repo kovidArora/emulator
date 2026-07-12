@@ -9,6 +9,7 @@ public:
     void tick();
     void reset();
     void tick_timers();
+    
 
     static constexpr int REG_SIZE=16;
     static constexpr int SCREEN_WIDTH = 64;
@@ -19,10 +20,7 @@ public:
 
 
 private:
-    void execute(uint16_t opcode);
-    uint16_t fetch();
-    void push (uint16_t value );
-    uint16_t pop ();
+
     uint16_t pc;
     uint8_t ram[RAM_SIZE];
     bool screen[SCREEN_WIDTH * SCREEN_HEIGHT];
@@ -33,5 +31,16 @@ private:
     bool keys[NUM_KEYS];
     uint8_t delay_timer;
     uint8_t sound_timer;
- 
+    void skipNextIfEquals(uint16_t opcode); 
+    void skipNextIfNotEquals(uint16_t opcode); 
+
+    void returnFromSubroutine();
+    void jump(uint16_t opcode);
+    void subroutine(uint16_t opcode);
+    void clear_screen();
+    void stop();
+    void execute(uint16_t opcode);
+    uint16_t fetch();
+    void push (uint16_t value );
+    uint16_t pop ();
 };
