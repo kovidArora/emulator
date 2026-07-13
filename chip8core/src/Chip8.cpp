@@ -61,6 +61,10 @@ void Chip8::execute(uint16_t opcode){
                 case 0x00EE: 
                     returnFromSubroutine();
                     break;
+                default :
+                    std::cout<<"Incorrect Opcode in opcode group 0x0XXX, something broke " ;     
+                    stop();
+                    break;
             }
             break;
         case 0x1000:
@@ -73,16 +77,51 @@ void Chip8::execute(uint16_t opcode){
             skipNextIfEquals(opcode);
             break;
         case 0x4000:
+            skipNextIfNotEquals(opcode);
             break;
         case 0x5000:
+            if((opcode & 0x000F)==0)
+            skipNextIfEqualsRegister(opcode);
             break;
         case 0x6000:
+            setRegister(opcode);
             break;
         case 0x7000:
+            incrementRegister(opcode);
             break;
         case 0x8000:
+            switch (opcode & 0x000F){
+                case 0x0000:
+                    setRegisterToRegister(opcode);
+                    break;
+                case 0x0001:
+                case 0x0002:
+                case 0x0003:
+                    setRegisterBitwise(opcode);
+                    break;
+                case 0x0004:
+                    sumWithCarry(opcode);
+                    break;
+                case 0x0005:
+                    subtractWithBorrow(opcode);
+                    break;
+                case 0x0006:
+                    rightShift(opcode);
+                    break;
+                case 0x0007:
+                    reverseSubtractWithBorrow(opcode);
+                    break;
+                case 0x000E:
+                    leftShift(opcode);
+                    break;
+                default :
+                    std::cout<<"Incorrect Opcode in opcode group 0x8XXX, something broke " ;     
+                    stop();
+                    break;
+            }
             break;
         case 0x9000:
+            skipNextIfNotEqualsRegister(opcode);
             break;
         case 0xA000:
             break;
@@ -95,6 +134,33 @@ void Chip8::execute(uint16_t opcode){
         case 0xE000:
             break;
         case 0xF000:
+            switch (opcode & 0x00FF){
+                case 0x0007:
+                    setRegisterToRegister(opcode);
+                    break;
+                case 0x000A:
+                    break;
+                case 0x0002:
+                    break;
+                case 0x0015:
+                    break;
+                case 0x0018:
+                    break;
+                case 0x001E:
+                    break;
+                case 0x0029:
+                    break;
+                case 0x0033:
+                    break;
+                case 0x0055:
+                    break;
+                case 0x0065:
+                    break;
+                default :
+                    std::cout<<"Incorrect Opcode in opcode group 0x8XXX, something broke " ;     
+                    stop();
+                    break;
+            }
             break;
         default :
             std::cout<<"Incorrect Opcode , something broke " ;     
@@ -114,10 +180,11 @@ uint16_t Chip8::fetch(){
     return op;
 }
 void Chip8::playSound()
-{
-    if(PlaySound(TEXT("../../assets/sound/Recording.wav"), NULL, SND_FILENAME | SND_ASYNC))
+{       //TODO: test sound in quick successions
+
+    if(!PlaySoundA("../../assets/sound/Recording.wav", NULL, SND_FILENAME | SND_ASYNC))
         {
-        std::cerr << "Failed to play sound.\n";
+        std::cerr << "Failed to play sound."<< GetLastError()<<"\n";
         }
     
 }
@@ -177,15 +244,86 @@ void Chip8::subroutine(uint16_t opcode){
 }
 void Chip8::skipNextIfEquals(uint16_t opcode){
     //this skips by incrementing pc once here , so that in the next fetch cycle its inc again and we skip one
-    uint8_t x = opcode & 0x0F00 >>8;
-    uint16_t nn = opcode & 0x00FF;
+    uint8_t x = (opcode & 0x0F00) >>8;
+    uint8_t nn = opcode & 0x00FF;
     if (v_reg[x]==nn)
         pc+=2;
-}; 
+}
 void Chip8::skipNextIfNotEquals(uint16_t opcode){
     //this skips by incrementing pc once here , so that in the next fetch cycle its inc again and we skip one
-    uint8_t x = opcode & 0x0F00>>8;
-    uint16_t nn = opcode & 0x00FF;
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t nn = opcode & 0x00FF;
     if (v_reg[x]!=nn)
         pc+=2;
-}; 
+} 
+void Chip8::skipNextIfEqualsRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t y = (opcode & 0x00F0)>>4;
+    if (v_reg[x]==v_reg[y])
+        pc+=2;
+}
+void Chip8::setRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t nn = opcode & 0x00FF;
+    v_reg[x]=nn;
+}
+void Chip8::incrementRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t nn = opcode & 0x00FF;
+    v_reg[x]+=nn;
+}
+void Chip8::setRegisterToRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t y = (opcode & 0x00F0)>>4;
+    v_reg[x]=v_reg[y];
+}
+void Chip8::setRegisterBitwise(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    uint8_t op = opcode & 0x000F;
+
+    switch(op){
+        case 0x0001: v_reg[x] |= v_reg[y]; break; // OR
+        case 0x0002: v_reg[x] &= v_reg[y]; break; // AND
+        case 0x0003: v_reg[x] ^= v_reg[y]; break; // XOR
+    }
+}
+void Chip8::sumWithCarry(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    uint16_t sum = static_cast<uint16_t>(v_reg[x])+static_cast<uint16_t>(v_reg[y]);
+    v_reg[x]=static_cast<uint8_t>(sum);
+    v_reg[0xF]=(sum>0xFF)?1:0;
+}
+void Chip8::subtractWithBorrow(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    int16_t subtract = static_cast<int16_t>(v_reg[x])-static_cast<int16_t>(v_reg[y]);
+    v_reg[x]=static_cast<uint8_t>(subtract);
+    v_reg[0xF]=(subtract<0)?0:1;
+}
+void Chip8::rightShift(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t last_digit=(v_reg[x] & 0x1);
+    v_reg[x]=v_reg[x]>>1;
+    v_reg[0xF]=last_digit;
+}
+void Chip8::reverseSubtractWithBorrow(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    int16_t subtract = static_cast<int16_t>(v_reg[y])-static_cast<int16_t>(v_reg[x]);
+    v_reg[x]=static_cast<uint8_t>(subtract);
+    v_reg[0xF]=(subtract<0)?0:1;
+}
+void Chip8::leftShift(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t first_digit=(v_reg[x] & 128)?1:0;
+    v_reg[x]<<=1;
+    v_reg[0xF]=first_digit;
+}
+void Chip8::skipNextIfNotEqualsRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00)>>8;
+    uint8_t y = (opcode & 0x00F0)>>4;
+    if (v_reg[x]!=v_reg[y])
+        pc+=2;
+}

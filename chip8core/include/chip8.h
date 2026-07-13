@@ -34,9 +34,14 @@ private:
     bool keys[NUM_KEYS];
     uint8_t delay_timer;
     uint8_t sound_timer;
+
+
     void skipNextIfEquals(uint16_t opcode); 
     void skipNextIfNotEquals(uint16_t opcode); 
-
+    void skipNextIfEqualsRegister(uint16_t opcode);
+    void setRegister(uint16_t opcode);
+    void incrementRegister(uint16_t opcode);
+    void setRegisterToRegister(uint16_t opcode);
     void returnFromSubroutine();
     void jump(uint16_t opcode);
     void subroutine(uint16_t opcode);
@@ -47,4 +52,12 @@ private:
     void push (uint16_t value );
     uint16_t pop ();
     void playSound();
+    void setRegisterBitwise(uint16_t opcode);
+    void sumWithCarry(uint16_t opcode);
+    void subtractWithBorrow(uint16_t opcode);
+    void rightShift(uint16_t opcode);
+    void reverseSubtractWithBorrow(uint16_t opcode);
+    void leftShift(uint16_t opcode);
+    void skipNextIfNotEqualsRegister(uint16_t opcode);
+
 };
