@@ -28,7 +28,6 @@ add_executable(testing
 target_link_libraries(desktop
     PRIVATE
         chip8_core
-        winmm
 )
 
 target_link_libraries(testing

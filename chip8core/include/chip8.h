@@ -2,6 +2,9 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <cstdint>
+#include <random>
+
+
 
 #pragma once
 
@@ -22,7 +25,9 @@ public:
     static constexpr int NUM_KEYS=16;
 
 
+
 private:
+    std::mt19937 rng{std::random_device{}()};
 
     uint16_t pc;
     uint8_t ram[RAM_SIZE];
@@ -35,7 +40,13 @@ private:
     uint8_t delay_timer;
     uint8_t sound_timer;
 
-
+    void waitForKeyPress(uint16_t opcode);
+    void updateSoundTimer(uint16_t opcode);
+    void updateDelayTimer(uint16_t opcode);
+    void storeDelayTimer(uint16_t opcode);
+    void drawSprite(uint16_t opcode);
+    void skipIfKeyPressed(uint16_t opcode);
+    void skipIfKeyNotPressed(uint16_t opcode);
     void skipNextIfEquals(uint16_t opcode); 
     void skipNextIfNotEquals(uint16_t opcode); 
     void skipNextIfEqualsRegister(uint16_t opcode);
@@ -59,5 +70,7 @@ private:
     void reverseSubtractWithBorrow(uint16_t opcode);
     void leftShift(uint16_t opcode);
     void skipNextIfNotEqualsRegister(uint16_t opcode);
-
+    void updateIRegister(uint16_t opcode);
+    void jumpToSum(uint16_t opcode );
+    void random(uint16_t opcode);
 };

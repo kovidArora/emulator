@@ -1,7 +1,7 @@
 #include "chip8.h"
 #include <algorithm>
 #include <iostream>
-
+#include <cstdlib>
 constexpr int FONTSET_SIZE=80;
 constexpr int START_ADDR= 0x200;
 const uint8_t FONTSET[FONTSET_SIZE]={
@@ -124,27 +124,44 @@ void Chip8::execute(uint16_t opcode){
             skipNextIfNotEqualsRegister(opcode);
             break;
         case 0xA000:
+            updateIRegister(opcode);
             break;
         case 0xB000:
+            jumpToSum(opcode);
             break;
         case 0xC000:
+            random(opcode);
             break;
         case 0xD000:
+            drawSprite(opcode);
             break;
         case 0xE000:
+            switch(opcode & 0x00FF){
+                case 0x009E:
+                    skipIfKeyPressed(opcode);
+                    break;
+                case 0x00A1:
+                    skipIfKeyNotPressed(opcode);
+                    break;
+                default :
+                    std::cout<<"Incorrect Opcode in opcode group 0xEXXX, something broke " ;     
+                    stop();
+                    break;
+            }
             break;
         case 0xF000:
             switch (opcode & 0x00FF){
                 case 0x0007:
-                    setRegisterToRegister(opcode);
+                    storeDelayTimer(opcode);
                     break;
                 case 0x000A:
-                    break;
-                case 0x0002:
+                    waitForKeyPress(opcode);
                     break;
                 case 0x0015:
+                    updateDelayTimer(opcode);
                     break;
                 case 0x0018:
+                    updateSoundTimer(opcode);
                     break;
                 case 0x001E:
                     break;
@@ -157,7 +174,7 @@ void Chip8::execute(uint16_t opcode){
                 case 0x0065:
                     break;
                 default :
-                    std::cout<<"Incorrect Opcode in opcode group 0x8XXX, something broke " ;     
+                    std::cout<<"Incorrect Opcode in opcode group 0xFXXX, something broke " ;     
                     stop();
                     break;
             }
@@ -326,4 +343,52 @@ void Chip8::skipNextIfNotEqualsRegister(uint16_t opcode){
     uint8_t y = (opcode & 0x00F0)>>4;
     if (v_reg[x]!=v_reg[y])
         pc+=2;
+}   
+void Chip8::updateIRegister(uint16_t opcode){
+    uint16_t nnn = opcode & 0xFFF;
+    i_reg=nnn;
 }
+void Chip8::jumpToSum(uint16_t opcode){
+    uint16_t nnn = opcode & 0xFFF;
+    pc = v_reg[0] + nnn;
+}
+void Chip8::random(uint16_t opcode){
+    std::uniform_int_distribution<int> dist(0, 255);
+
+    uint8_t r = dist(rng);
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t nn = opcode & 0x00FF;
+
+    v_reg[x] = r & nn;
+}
+void Chip8::skipIfKeyPressed(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    bool key = keys[v_reg[x]];
+    if(key)
+        pc+=2;
+}
+void Chip8::skipIfKeyNotPressed(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    bool key = keys[v_reg[x]];
+    if(!key)
+        pc+=2;
+}
+void Chip8::drawSprite(uint16_t opcode){
+    //TODO :fill this later
+}
+void Chip8::waitForKeyPress(uint16_t opcode){
+    //TODO : fill this later
+}
+void Chip8::storeDelayTimer(uint16_t opcode){
+        uint8_t x = (opcode & 0x0F00) >> 8;
+        v_reg[x]=delay_timer;
+}
+void Chip8::updateDelayTimer(uint16_t opcode){
+        uint8_t x = (opcode & 0x0F00) >> 8;
+        delay_timer=v_reg[x];
+}
+void Chip8::updateSoundTimer(uint16_t opcode){
+        uint8_t x = (opcode & 0x0F00) >> 8;
+        sound_timer=v_reg[x];
+}
+
