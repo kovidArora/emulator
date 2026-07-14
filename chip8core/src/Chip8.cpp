@@ -467,3 +467,16 @@ void Chip8::loadRAMtoRegister(uint16_t opcode){
         v_reg[idx]=ram[i+idx];
     }
 }
+const bool* Chip8::get_display() const{
+    return screen;
+}
+void Chip8::keypress(size_t idx , bool pressed){
+    keys[idx]=pressed;
+}
+void Chip8::load(std::vector<uint8_t>& data){
+    uint16_t start=START_ADDR;
+    for (size_t i = 0; i < data.size(); i++){
+        ram[start + i] = data[i];
+    }
+
+}

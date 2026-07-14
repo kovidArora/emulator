@@ -3,7 +3,7 @@
 #include <mmsystem.h>
 #include <cstdint>
 #include <random>
-
+#include <vector>
 
 
 #pragma once
@@ -15,8 +15,9 @@ public:
     void tick();
     void reset();
     void tick_timers();
-    
-
+    const bool* get_display() const;
+    void keypress(size_t idx, bool pressed);
+    void load ( std::vector<uint8_t>& data);
     static constexpr int REG_SIZE=16;
     static constexpr int SCREEN_WIDTH = 64;
     static constexpr int SCREEN_HEIGHT = 32;
@@ -31,7 +32,7 @@ private:
 
     uint16_t pc;
     uint8_t ram[RAM_SIZE];
-    bool screen[SCREEN_WIDTH * SCREEN_HEIGHT];
+    bool screen[SCREEN_WIDTH * SCREEN_HEIGHT] ;
     uint8_t v_reg[REG_SIZE];
     uint16_t i_reg;
     uint16_t stack[STACK_SIZE];
