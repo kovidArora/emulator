@@ -164,14 +164,19 @@ void Chip8::execute(uint16_t opcode){
                     updateSoundTimer(opcode);
                     break;
                 case 0x001E:
+                    incrementIRegister(opcode);
                     break;
                 case 0x0029:
+                    setIToFont(opcode);
                     break;
                 case 0x0033:
+                    storeBinaryCodedDecimalToI(opcode);
                     break;
                 case 0x0055:
+                    storeRegisterToRAM(opcode);
                     break;
                 case 0x0065:
+                    loadRAMtoRegister(opcode);
                     break;
                 default :
                     std::cout<<"Incorrect Opcode in opcode group 0xFXXX, something broke " ;     
@@ -374,21 +379,91 @@ void Chip8::skipIfKeyNotPressed(uint16_t opcode){
         pc+=2;
 }
 void Chip8::drawSprite(uint16_t opcode){
-    //TODO :fill this later
-}
-void Chip8::waitForKeyPress(uint16_t opcode){
-    //TODO : fill this later
-}
-void Chip8::storeDelayTimer(uint16_t opcode){
-        uint8_t x = (opcode & 0x0F00) >> 8;
-        v_reg[x]=delay_timer;
-}
-void Chip8::updateDelayTimer(uint16_t opcode){
-        uint8_t x = (opcode & 0x0F00) >> 8;
-        delay_timer=v_reg[x];
-}
-void Chip8::updateSoundTimer(uint16_t opcode){
-        uint8_t x = (opcode & 0x0F00) >> 8;
-        sound_timer=v_reg[x];
+    //store the sprire location and height
+    uint8_t x = v_reg[(opcode & 0x0F00)>>8];
+    uint8_t y = v_reg[(opcode & 0x00F0)>>4];
+    uint8_t num_rows = opcode & 0x000F;
+    bool flipped = false;
+    for(uint16_t row=0; row <num_rows; row++){
+        //i_reg stores sprite address in memory , so here we are going row by row , byte by byte of that address
+        uint16_t address= i_reg + row;
+        uint8_t pixels = ram[address];
+        for (uint16_t column =0; column<8;column++){
+            //checking each column , each pixel in the row aka each bit
+            if(pixels & (0b10000000 >> column)){
+                //get the pixel cords 
+                uint16_t x_cord= (x+column)%SCREEN_WIDTH;
+                uint16_t y_cord= (y+row)%SCREEN_HEIGHT;
+                //since screen is stored in a single contiguous array , we get the location of the pixel and check if it has been flipped
+                uint16_t idx= x_cord+SCREEN_WIDTH*y_cord;
+                flipped |= screen[idx];
+                screen[idx] ^= true;
+                //This is the collision case — the sprite is XOR-erasing something that was already there.
+            }
+        }
+    }
+     if (flipped) 
+        v_reg[0xF] = 1;
+    else 
+        v_reg[0xF] = 0;
 }
 
+void Chip8::waitForKeyPress(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    bool pressed = false;
+    for (int i =0; i <NUM_KEYS;i++){
+        if(keys[i]) {
+            v_reg[x] = i ;
+            pressed = true;
+            break;
+        }
+    }
+    if (!pressed){
+        pc-=2;
+    }
+}
+void Chip8::storeDelayTimer(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    v_reg[x]=delay_timer;
+}
+void Chip8::updateDelayTimer(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    delay_timer=v_reg[x];
+}
+void Chip8::updateSoundTimer(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    sound_timer=v_reg[x];
+}
+void Chip8::incrementIRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint16_t sum= i_reg+ v_reg[x];
+    i_reg=sum & 0x0FFF;
+}
+void Chip8::setIToFont(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t c = v_reg[x];
+    i_reg=c*5;
+}
+void Chip8::storeBinaryCodedDecimalToI(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t value = v_reg[x];
+
+    ram[i_reg]     = value / 100;
+    ram[i_reg + 1] = (value % 100) / 10;
+    ram[i_reg + 2] = value % 10;
+
+}
+void Chip8::storeRegisterToRAM(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint16_t i = i_reg;
+    for (size_t idx=0 ; idx <=x ;idx++){
+        ram[i+idx]=v_reg[idx];
+    }
+}
+void Chip8::loadRAMtoRegister(uint16_t opcode){
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint16_t i = i_reg;
+    for (size_t idx=0 ; idx <=x ;idx++){
+        v_reg[idx]=ram[i+idx];
+    }
+}

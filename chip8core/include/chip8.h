@@ -73,4 +73,9 @@ private:
     void updateIRegister(uint16_t opcode);
     void jumpToSum(uint16_t opcode );
     void random(uint16_t opcode);
+    void incrementIRegister(uint16_t opcode);
+    void setIToFont(uint16_t opcode);
+    void storeBinaryCodedDecimalToI(uint16_t opcode);
+    void storeRegisterToRAM(uint16_t opcode);
+    void loadRAMtoRegister(uint16_t opcode);
 };
