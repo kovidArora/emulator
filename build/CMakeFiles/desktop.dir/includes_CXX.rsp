@@ -1,0 +1,1 @@
+-IC:/Users/kriti/OneDrive/Desktop/coding/CHIP8E~1/CHIP8C~1/include -isystem "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/include" -isystem "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/include/SDL2"

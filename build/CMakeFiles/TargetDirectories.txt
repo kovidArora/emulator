@@ -1,5 +1,5 @@
 C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/chip8_core.dir
 C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/desktop.dir
 C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/testing.dir
-C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/edit_cache.dir
+C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build/CMakeFiles/rebuild_cache.dir

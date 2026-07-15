@@ -4,7 +4,7 @@
 
 int main() {
     // Play a WAV file asynchronously
-    PlaySoundA("../../assets/sound/Recording.wav", NULL, SND_FILENAME | SND_ASYNC);
+    if(!PlaySoundA("assets/sound/Recording.wav", NULL, SND_FILENAME | SND_ASYNC))std::cout<<"something went wrong";
 
     std::cout << "Playing sound...\n";
 

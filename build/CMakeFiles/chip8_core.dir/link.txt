@@ -1,0 +1,2 @@
+C:\msys64\mingw64\bin\ar.exe qc libchip8_core.a CMakeFiles/chip8_core.dir/chip8core/src/Chip8.cpp.obj
+C:\msys64\mingw64\bin\ranlib.exe libchip8_core.a

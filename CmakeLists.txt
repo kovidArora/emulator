@@ -5,6 +5,9 @@ project(CHIP8)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# set(CMAKE_PREFIX_PATH "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/share")
+find_package(SDL2 CONFIG REQUIRED)
+
 add_library(chip8_core
     chip8core/src/Chip8.cpp  
     chip8core/include/chip8.h  
@@ -28,9 +31,17 @@ add_executable(testing
 target_link_libraries(desktop
     PRIVATE
         chip8_core
+        SDL2::SDL2main
+        SDL2::SDL2
+
 )
 
 target_link_libraries(testing
     PRIVATE
         chip8_core
+)
+add_custom_command(TARGET desktop POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:desktop>/assets
 )

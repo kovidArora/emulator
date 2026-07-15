@@ -1,0 +1,1 @@
+ libchip8_core.a "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/lib/libSDL2main.a" "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/lib/libSDL2.dll.a" -lwinmm -lshell32 -Wl,--undefined=WinMain -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
