@@ -1,3 +1,9 @@
+git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+C:\vcpkg\bootstrap-vcpkg.bat
+C:\vcpkg\vcpkg.exe install sdl2:x64-mingw-dynamic
+change 
+"CMAKE_TOOLCHAIN_FILE":
+"C:/Users/kriti/vcpkg/scripts/buildsystems/vcpkg.cmake"
 Make sure that sdl.dll is in the folder with the executable , otherwise its gonna run into problems , 
 also change 
         "CMAKE_TOOLCHAIN_FILE": "C:/your/path/vcpkg/scripts/buildsystems/vcpkg.cmake",
