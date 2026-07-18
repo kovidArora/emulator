@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe  @CMakeFiles/chip8_core.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\chip8_core.dir\\chip8core\\src\\Chip8.cpp.obj -c \"C:\\Users\\kriti\\OneDrive\\Desktop\\coding\\chip 8 emulator\\chip8core\\src\\Chip8.cpp\"",
+  "file": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/chip8core/src/Chip8.cpp",
+  "output": "CMakeFiles/chip8_core.dir/chip8core/src/Chip8.cpp.obj"
+},
+{
+  "directory": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe  @CMakeFiles/desktop.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\desktop.dir\\application\\src\\main.cpp.obj -c \"C:\\Users\\kriti\\OneDrive\\Desktop\\coding\\chip 8 emulator\\application\\src\\main.cpp\"",
+  "file": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/application/src/main.cpp",
+  "output": "CMakeFiles/desktop.dir/application/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe  @CMakeFiles/testing.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles\\testing.dir\\application\\src\\testing.cpp.obj -c \"C:\\Users\\kriti\\OneDrive\\Desktop\\coding\\chip 8 emulator\\application\\src\\testing.cpp\"",
+  "file": "C:/Users/kriti/OneDrive/Desktop/coding/chip 8 emulator/application/src/testing.cpp",
+  "output": "CMakeFiles/testing.dir/application/src/testing.cpp.obj"
+}
+]

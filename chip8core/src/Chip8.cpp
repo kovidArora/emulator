@@ -379,7 +379,7 @@ void Chip8::skipIfKeyNotPressed(uint16_t opcode){
         pc+=2;
 }
 void Chip8::drawSprite(uint16_t opcode){
-    //store the sprire location and height
+    //store the sprite location and height
     uint8_t x = v_reg[(opcode & 0x0F00)>>8];
     uint8_t y = v_reg[(opcode & 0x00F0)>>4];
     uint8_t num_rows = opcode & 0x000F;
@@ -396,7 +396,7 @@ void Chip8::drawSprite(uint16_t opcode){
                 uint16_t y_cord= (y+row)%SCREEN_HEIGHT;
                 //since screen is stored in a single contiguous array , we get the location of the pixel and check if it has been flipped
                 uint16_t idx= x_cord+SCREEN_WIDTH*y_cord;
-                flipped |= screen[idx];
+                flipped  |= screen[idx];
                 screen[idx] ^= true;
                 //This is the collision case — the sprite is XOR-erasing something that was already there.
             }
@@ -473,7 +473,7 @@ const bool* Chip8::get_display() const{
 void Chip8::keypress(size_t idx , bool pressed){
     keys[idx]=pressed;
 }
-void Chip8::load(std::vector<uint8_t>& data){
+void Chip8::ROMLoad(std::vector<uint8_t>& data){
     uint16_t start=START_ADDR;
     for (size_t i = 0; i < data.size(); i++){
         ram[start + i] = data[i];

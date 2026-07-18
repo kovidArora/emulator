@@ -5,13 +5,11 @@ project(CHIP8)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# set(CMAKE_PREFIX_PATH "C:/Users/kriti/vcpkg/installed/x64-mingw-dynamic/share")
 find_package(SDL2 CONFIG REQUIRED)
 
 add_library(chip8_core
     chip8core/src/Chip8.cpp  
     chip8core/include/chip8.h  
-
 )
 target_include_directories(chip8_core
     PUBLIC

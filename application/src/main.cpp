@@ -1,3 +1,4 @@
+
 #include <SDL.h>
 #include <iostream>
 
@@ -8,6 +9,7 @@ int main(int argc, char* argv[]) {
     }
 
     SDL_Window* window = SDL_CreateWindow(
+        
         "CHIP-8 Emulator",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         640, 320,

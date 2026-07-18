@@ -1,0 +1,24 @@
+Make sure that sdl.dll is in the folder with the executable , otherwise its gonna run into problems , 
+also change 
+        "CMAKE_TOOLCHAIN_FILE": "C:/your/path/vcpkg/scripts/buildsystems/vcpkg.cmake",
+ in cmakepresets until i find a way to automate its
+
+
+
+
+
+ In the interests of portability, rather than installing SDL2 at the system level I've included the SDL2 development package within my project (under a folder dep) and use 
+```
+set(SDL2_DIR ${CMAKE_CURRENT_LIST_DIR}/dep/SDL2/cmake/)
+```
+
+to allow find_package to find it. 
+
+Also to ensure the DLL gets copied to the build directory I've added this to automate this step (where my-project is the project name)
+```
+add_custom_command(TARGET my-project POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:my-project> $<TARGET_RUNTIME_DLLS:my-project>
+  COMMAND_EXPAND_LISTS
+)
+```
+Rather than manually copying the DLL (which I'll probably forget when setting the project up on a new machine).

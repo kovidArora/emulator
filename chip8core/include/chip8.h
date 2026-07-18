@@ -17,7 +17,7 @@ public:
     void tick_timers();
     const bool* get_display() const;
     void keypress(size_t idx, bool pressed);
-    void load ( std::vector<uint8_t>& data);
+    void ROMLoad ( std::vector<uint8_t>& data);
     static constexpr int REG_SIZE=16;
     static constexpr int SCREEN_WIDTH = 64;
     static constexpr int SCREEN_HEIGHT = 32;
